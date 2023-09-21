@@ -1,6 +1,9 @@
 const num = 200;
 const section = document.querySelector('section');
+const aside = document.querySelector('aside');
+const loadingNum = document.querySelector('aside p span');
 const imgs = createImgs(section, num);
+const delay = convertSpeed(aside);
 
 window.addEventListener('mousemove', (e) => {
 	const percent = getPercent(e, num);
@@ -10,11 +13,11 @@ window.addEventListener('mousemove', (e) => {
 function getPercent(e, num) {
 	const curPos = e.pageX;
 	const wid = window.innerWidth;
-	return parseInt((curPos / wid) * 200);
+	return parseInt((curPos / wid) * num);
 }
 
 function createImgs(target, num) {
-	for (let i = 0; i <= num; i++) {
+	for (let i = 0; i < num; i++) {
 		const img = document.createElement('img');
 		const src = document.createAttribute('src');
 		src.value = `img/pic${i}.jpg`;
@@ -27,10 +30,15 @@ function createImgs(target, num) {
 		//해당 돔에 수반되는 소스이미지가 로딩완료시 실행되는 이벤트
 		img.onload = () => {
 			count++;
-			console.log('현재 로딩된 소스이미지', count);
+			const percent = parseInt((count / num) * 100);
+			loadingNum.innerText = percent;
 			if (count === num) {
 				//동적으로 만들어진 img요소의 소스이미지가 랜저링완료된 시점
 				console.log('모든 소스이미지 로딩 완료');
+				aside.classList.add('off');
+				setTimeout(() => {
+					aside.remove();
+				}, delay);
 			}
 		};
 	});
@@ -40,4 +48,9 @@ function createImgs(target, num) {
 function activation(arr, index) {
 	arr.forEach((el) => (el.style.display = 'none'));
 	arr[index].style.display = 'block';
+}
+
+function convertSpeed(el) {
+	const result = getComputedStyle(el).transitionDuration;
+	return parseFloat(result) * 1000;
 }
