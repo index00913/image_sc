@@ -10,12 +10,32 @@
 //위의 100번 반복을 돌리면서
 //appenf로 이미지 요소 반복추가
 
-const section = document.querySelector('section');
+//백분율 구하는 공식
+//현재수치값 / 전체수치값 * 100 (백분율)
+//현재수치값 / 전체수치값 * 200 (이백분율)
 
-for (let i = 0; i <= 200; i++) {
-	const img = document.createElement('img');
-	const src = document.createAttribute('src');
-	src.value = `img/pic${i}.jpg`;
-	img.setAttributeNode(src);
-	section.append(img);
+const section = document.querySelector('section');
+const imgs = createImgs(section, 200);
+console.log(imgs);
+
+window.addEventListener('mousemove', (e) => {
+	const curPos = e.pageX;
+	const wid = window.innerWidth;
+	const percent = parseInt((curPos / wid) * 200);
+	console.log(percent);
+
+	//parseInt(숫자) : 실수에서 소수점 아래를 버려서 정수반환
+	//parseFloat(숫자) : 소수점 아래까지 있는 실수 반환
+});
+
+//인수로 객수를 받아서 동적으로 img생성해 주는 함수
+function createImgs(target, num) {
+	for (let i = 0; i <= num; i++) {
+		const img = document.createElement('img');
+		const src = document.createAttribute('src');
+		src.value = `img/pic${i}.jpg`;
+		img.setAttributeNode(src);
+		target.append(img);
+	}
+	return target.querySelectorAll('img');
 }
